@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ramachandra Dayal K - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom dark mode styles */
+        .dark .bg-gray-100 { background-color: #111827; }
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .text-gray-800 { color: #d1d5db; }
+        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-700 { color: #d1d5db; }
+        .dark .text-gray-600 { color: #9ca3af; }
+        .dark .text-gray-500 { color: #6b7280; }
+        .dark .border-t { border-color: #374151; }
+        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.05); }
+        .dark .bg-cyan-100 { background-color: #0e7490; }
+        .dark .text-cyan-800 { color: #ecfeff; }
+        .dark .bg-gray-50 { background-color: #374151; }
+        .dark .border-gray-300 { border-color: #4b5563; }
+
+        /* Chat bubbles */
+        .bubble-user { background: linear-gradient(90deg,#06b6d4,#0891b2); color: white; }
+        .bubble-ai { background: #f3f4f6; color: #111827; }
+        .bubble-ai.dark { background: #111827; color: #d1d5db; }
+
+        /* subtle animations */
+        .fade-in { animation: fadeIn .28s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to { opacity:1; transform: translateY(0);} }
+
+        /* small screens chat height */
+        @media (max-width: 640px) {
+            #chat-box { height: 52vh; }
+        }
+    </style>
+
+    <script>
+        // Set theme on page load (improved)
+        (function() {
+            const stored = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800 transition-colors duration-300">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-cyan-600">RDK</a>
+            <nav id="main-nav" class="hidden md:flex space-x-6 text-gray-600">
+                <a href="#about" class="hover:text-cyan-600 transition-colors">About</a>
+                <a href="#projects" class="hover:text-cyan-600 transition-colors">Projects</a>
+                <a href="#contributions" class="hover:text-cyan-600 transition-colors">Contributions</a>
+                <a href="#skills" class="hover:text-cyan-600 transition-colors">Skills</a>
+                <a href="#contact" class="hover:text-cyan-600 transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center space-x-4">
+                <button id="theme-toggle" aria-label="Toggle theme" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5"></i>
+                    <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5 hidden"></i>
+                </button>
+            </div>
+
+            <div class="md:hidden flex items-center space-x-2">
+                <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 border-t">
+            <a href="#about" class="block py-2 text-gray-600 hover:text-cyan-600">About</a>
+            <a href="#projects" class="block py-2 text-gray-600 hover:text-cyan-600">Projects</a>
+            <a href="#contributions" class="block py-2 text-gray-600 hover:text-cyan-600">Contributions</a>
+            <a href="#skills" class="block py-2 text-gray-600 hover:text-cyan-600">Skills</a>
+            <a href="#contact" class="block py-2 text-gray-600 hover:text-cyan-600">Contact</a>
+            <button id="theme-toggle-mobile" class="mt-4 w-full flex items-center justify-center p-2 rounded-lg text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700">
+                <i id="theme-icon-sun-mobile" data-lucide="sun" class="w-5 h-5 mr-2"></i>
+                <i id="theme-icon-moon-mobile" data-lucide="moon" class="w-5 h-5 mr-2 hidden"></i>
+                <span id="theme-text-mobile">Switch to Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <aside class="lg:col-span-1 space-y-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <img src="images/portfolio.png" alt="Ramachandra Dayal K" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-cyan-500 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/128x128/e2e8f0/334155?text=RDK';">
+                    <h1 class="text-2xl font-bold text-gray-900">Ramachandra Dayal K</h1>
+                    <p class="text-md text-gray-600 mt-1">🎯 AI Engineer | ⚙️ Machine Learning & Deep Learning | 🧠 Computer Vision & NLP</p>
+                    <p class="text-sm text-gray-500 mt-2">Chennai, India</p>
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <a href="https://github.com/Sriramdayal" target="_blank" class="text-gray-500 hover:text-cyan-600"><i data-lucide="github" class="w-6 h-6"></i></a>
+                        <a href="https://linkedin.com/in/ramachandradayalk" target="_blank" class="text-gray-500 hover:text-cyan-600"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+                    </div>
+                    <a href="#contact" class="mt-6 inline-block w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">Contact Info</a>
+                </div>
+            </aside>
+
+            <main class="lg:col-span-2 space-y-8">
+                <section id="about" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">About</h2>
+                    <p class="text-gray-700 leading-relaxed">
+                        I enjoy the full journey: cleaning chaotic data, building pipelines that actually run, and watching models make sense of the world in real time. To me, AI isn’t about hype — it’s about curiosity, precision, and creating something that feels alive in how it learns and reacts.
+                    </p>
+                </section>
+
+                <section id="projects" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Projects</h2>
+                    <div class="space-y-6">
+                        <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div class="flex-shrink-0">
+                                <img src="images/Lionel_Messi_Player_of_the_Year_2011.jpg" alt="Project Icon" class="w-16 h-16 rounded-md object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Player Re-Identification (YOLOv8+ TorchReID)</h3>
+                                <p class="text-sm text-gray-600 mt-1">Developed a pipeline to detect, track, and re-identify football players, integrating OCR for jersey number recognition.</p>
+                                <a href="https://github.com/Sriramdayal/Re_identification" target="_blank" class="text-sm text-cyan-600 hover:underline mt-2 inline-block">View on GitHub &rarr;</a>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div class="flex-shrink-0">
+                                <img src="images/360_F_1032469808_5AKt0mOrQCn1uF3Bq5mAM4HBrZ8Njy1b.webp" alt="Project Icon" class="w-16 h-16 rounded-md object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Sensor Data Processing for Exercise Recognition</h3>
+                                <p class="text-sm text-gray-600 mt-1">Built ML models to classify barbell exercises and count repetitions from MetaMotion sensor data.</p>
+                                <a href="https://colab.research.google.com/drive/13zKf7evJWQWiJlykDDfOb9zzVqVEu_9f?usp=sharing&pli=1&authuser=3" target="_blank" class="text-sm text-cyan-600 hover:underline mt-2 inline-block">Source &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="contributions" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Open Source Contributions</h2>
+                    <div class="space-y-6">
+                        <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div class="flex-shrink-0">
+                                <img src="images/abstract-curly-tendrils-background.webp" alt="Project Icon" class="w-16 h-16 rounded-md object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">SEAL–BDH Hybrid Architecture</h3>
+                                <p class="text-sm text-gray-600 mt-1">Hybrid simulation exploring adaptive self-improvement and biologically inspired neural dynamics.</p>
+                                <a href="https://github.com/Sriramdayal/Hybrid_BDH-SEAL" target="_blank" class="text-sm text-cyan-600 hover:underline mt-2 inline-block">View on GitHub &rarr;</a>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div class="flex-shrink-0">
+                                <img src="images/250px-PyPI_logo.svg.webp" alt="Project Icon" class="w-16 h-16 rounded-md object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Py-Easy-Env: Visual Env Manager</h3>
+                                <p class="text-sm text-gray-600 mt-1">A graphical tool to manage Python dependencies and environments intuitively.</p>
+                                <a href="https://github.com/Sriramdayal/py-easy-env-manager" target="_blank" class="text-sm text-cyan-600 hover:underline mt-2 inline-block">View on GitHub &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="skills" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                  <h2 class="text-xl font-bold text-gray-900 mb-6">Skills</h2>
+                  <div class="space-y-6">
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Programming Languages</h3>
+                        <div class="flex flex-wrap gap-2">
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-python-plain colored text-lg"></i> Python
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-java-plain colored text-lg"></i> Java
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-mysql-plain colored text-lg"></i> SQL
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Frameworks & Libraries</h3>
+                        <div class="flex flex-wrap gap-2">
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-pytorch-original colored text-lg"></i> PyTorch
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-tensorflow-original colored text-lg"></i> TensorFlow
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="devicon-scikitlearn-plain colored text-lg"></i> Scikit-learn
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                             <i class="devicon-opencv-plain colored text-lg"></i> OpenCV
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Domains</h3>
+                        <div class="flex flex-wrap gap-2">
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Computer Vision
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i data-lucide="brain-circuit" class="w-4 h-4"></i> NLP
+                          </span>
+                          <span class="flex items-center gap-2 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                            <i data-lucide="line-chart" class="w-4 h-4"></i> Time-Series
+                          </span>
+                        </div>
+                      </div>
+                  </div>
+                </section>
+
+                <section id="contact" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Contact Me</h2>
+                       <form id="contact-form">
+                           <div class="mb-4">
+                               <label for="name" class="block text-gray-700 mb-1 text-sm font-medium">Your Name</label>
+                               <input type="text" id="name" name="name" class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
+                           </div>
+                           <div class="mb-4">
+                               <label for="email" class="block text-gray-700 mb-1 text-sm font-medium">Your Email</label>
+                               <input type="email" id="email" name="email" class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
+                           </div>
+                           <div class="mb-4">
+                               <label for="message" class="block text-gray-700 mb-1 text-sm font-medium">Message</label>
+                               <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required></textarea>
+                           </div>
+                           <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                               Send Message
+                           </button>
+                       </form>
+                </section>
+
+                <!-- AI Chat: integrated but styled to match site -->
+                <section id="ai-chat" class="bg-white rounded-lg shadow-md p-6 fade-in">
+                  <div class="flex items-start justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">Ask Me Anything — AI</h2>
+                    <div class="text-sm text-gray-500">Powered by your local LLaMA</div>
+                  </div>
+
+                  <div id="chat-box" class="h-64 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-gray-50 mb-4">
+                      <div class="text-sm text-gray-500 text-center">Ask about my projects, skills, or background.</div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <input id="user-input" type="text" placeholder="Type your question..." class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <button id="send-btn" class="bg-cyan-500 text-white px-4 py-2 rounded-r-lg hover:bg-cyan-600">Send</button>
+                  </div>
+
+                  <div id="chat-note" class="mt-3 text-xs text-gray-500">
+                    Tip: Keep questions short. Server must be running: <code>ollama serve</code> + <code>node server.js</code>.
+                  </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <footer class="text-center py-6 border-t mt-8">
+        <p class="text-sm text-gray-500">&copy; 2025 Ramachandra Dayal K. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Theme Toggle logic (desktop + mobile)
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        const sunIconMobile = document.getElementById('theme-icon-sun-mobile');
+        const moonIconMobile = document.getElementById('theme-icon-moon-mobile');
+        const themeTextMobile = document.getElementById('theme-text-mobile');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                if (sunIcon) sunIcon.classList.add('hidden');
+                if (moonIcon) moonIcon.classList.remove('hidden');
+                if (sunIconMobile) sunIconMobile.classList.add('hidden');
+                if (moonIconMobile) moonIconMobile.classList.remove('hidden');
+                themeTextMobile.textContent = 'Switch to Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (sunIcon) sunIcon.classList.remove('hidden');
+                if (moonIcon) moonIcon.classList.add('hidden');
+                if (sunIconMobile) sunIconMobile.classList.remove('hidden');
+                if (moonIconMobile) moonIconMobile.classList.add('hidden');
+                themeTextMobile.textContent = 'Switch to Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function toggleTheme() {
+            const current = localStorage.getItem('theme') === 'dark' ? 'dark' : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        if (themeToggleMobile) themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Ensure proper initial icons
+        applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+
+        // Contact Form (unchanged behavior)
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+          contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            const subject = `Message from ${name} via Portfolio`;
+            const body = `${message}\n\n---\nFrom: ${name}\nEmail: ${email}`;
+            window.location.href = `mailto:sriramdayal279@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+          });
+        }
+    </script>
+
+    <!-- Chat script: sends requests to your local backend (node server.js -> Ollama) -->
+    <script>
+      (function() {
+        const sendBtn = document.getElementById('send-btn');
+        const input = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+
+        // helper: append bubble
+        function appendBubble(text, who='ai') {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'mb-2 fade-in flex ' + (who === 'user' ? 'justify-end' : 'justify-start');
+
+          const bubble = document.createElement('div');
+          bubble.className = 'px-4 py-2 rounded-2xl max-w-[75%] break-words text-sm ' + (who === 'user' ? 'bubble-user' : 'bubble-ai');
+
+          if (document.documentElement.classList.contains('dark') && who === 'ai') bubble.classList.add('dark');
+
+          bubble.innerText = text;
+          wrapper.appendChild(bubble);
+          chatBox.appendChild(wrapper);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // show typing indicator
+        function showTyping() {
+          const typing = document.createElement('div');
+          typing.id = 'typing-indicator';
+          typing.className = 'mb-2 fade-in flex justify-start';
+          typing.innerHTML = `<div class="px-4 py-2 rounded-2xl max-w-[50%] text-sm bubble-ai${document.documentElement.classList.contains('dark') ? ' dark' : ''}">
+              <span class="animate-pulse inline-block">● ● ●</span>
+            </div>`;
+          chatBox.appendChild(typing);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function hideTyping() {
+          const el = document.getElementById('typing-indicator');
+          if (el) el.remove();
+        }
+
+        async function sendMessage() {
+          const message = input.value.trim();
+          if (!message) return;
+          appendBubble(message, 'user');
+          input.value = '';
+          showTyping();
+
+          try {
+            const resp = await fetch('http://localhost:5000/ask', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt: message })
+            });
+
+            hideTyping();
+
+            if (!resp.ok) {
+              appendBubble('⚠️ Unable to reach AI server. Is node server running?', 'ai');
+              return;
+            }
+
+            const data = await resp.json();
+            const answer = (data && data.response) ? data.response : 'No response received from model.';
+            appendBubble(answer, 'ai');
+
+          } catch (err) {
+            hideTyping();
+            console.error(err);
+            appendBubble('⚠️ Error connecting to AI server. Check server logs.', 'ai');
+          }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        // Optional: keep chat across navigation during session using sessionStorage
+        window.addEventListener('beforeunload', () => {
+          // do nothing heavy; optionally persist
+        });
+
+      })();
+    </script>
+</body>
+</html>
