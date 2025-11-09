@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 // Middleware
 app.use(cors());
@@ -21,7 +21,7 @@ const MODEL_NAME = "llama3.2:1b";
 
 // Root check
 app.get("/ping", (req, res) => {
-  res.send("✅ Ollama Portfolio AI is running!");
+  res.send("✅ Ollama  AI is running!");
 });
 
 // Ask endpoint
@@ -55,6 +55,6 @@ app.post("/ask", async (req, res) => {
 
 // Run server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`🌐 Use ngrok to expose: ngrok http ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
+
