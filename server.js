@@ -1,8 +1,12 @@
-// server.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 5000;
@@ -10,16 +14,17 @@ const PORT = 5000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(__dirname)); // serve frontend files
 
-// Select your model here
-const MODEL_NAME = "llama3.2:1b"; // or "llama-fitcoach:latest"
+// Your local Ollama model
+const MODEL_NAME = "llama3.2:1b";
 
-// Root endpoint
-app.get("/", (req, res) => {
-  res.send("✅ Ollama Portfolio API is running successfully!");
+// Root check
+app.get("/ping", (req, res) => {
+  res.send("✅ Ollama Portfolio AI is running!");
 });
 
-// Chat endpoint
+// Ask endpoint
 app.post("/ask", async (req, res) => {
   const { prompt } = req.body;
 
@@ -33,36 +38,23 @@ app.post("/ask", async (req, res) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: MODEL_NAME,
-        prompt: `You are Sriram Dayal's personal AI assistant on his portfolio website. 
-        Provide friendly, short, and accurate answers about his work, background, and AI interests.
-
+        prompt: `Your name is Jarvis, Give concise and helpful answers.Adapt your communication style based on the user's preferences. If the user seems formal, respond formally; if they are casual, be more relaxed. Always be respectful and professional.
         User: ${prompt}
         Assistant:`,
         stream: false,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`Ollama API returned status ${response.status}`);
-    }
-
     const data = await response.json();
-
-    if (!data.response) {
-      throw new Error("Empty response from Ollama.");
-    }
-
     res.json({ response: data.response.trim() });
   } catch (error) {
-    console.error("❌ Error connecting to Ollama:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to connect to Ollama or process the request." });
+    console.error("❌ Ollama connection error:", error);
+    res.status(500).json({ error: "Failed to connect to Ollama." });
   }
 });
 
-// Start server
+// Run server
 app.listen(PORT, () => {
-  console.log(`🚀 Portfolio AI server is live on http://localhost:${PORT}`);
-  console.log(`🌐 Public access (via ngrok): https://01e8f9d1a8d1.ngrok-free.app`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🌐 Use ngrok to expose: ngrok http ${PORT}`);
 });
