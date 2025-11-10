@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // 🧠 Ollama Configuration
 const MODEL_NAME = "llama3.2:1b";
-const OLLAMA_API_URL =
+const OLLAMA_API_URL = "https://abcd1234.ngrok-free.app/api/generate";
   process.env.OLLAMA_API_URL ||
   "https://abcd1234.ngrok-free.app/api/generate"; // 🔁 update this every time you restart ngrok
 
