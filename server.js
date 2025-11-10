@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -7,20 +6,32 @@ import fetch from "node-fetch";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// 🧩 Allow requests from your GitHub Pages frontend
+app.use(
+  cors({
+    origin: [
+      "https://sriramdayal.github.io", // ✅ your GitHub Pages domain
+      "http://localhost:3000" // for local testing
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(bodyParser.json());
 
-// Ollama server config
-const MODEL_NAME = "llama3.2:1b"; 
-const OLLAMA_API_URL = "http://100.20.92.101:11434/api/generate"; // your Render server IP
+// 🧠 Ollama Configuration
+const MODEL_NAME = "llama3.2:1b";
+const OLLAMA_API_URL =
+  process.env.OLLAMA_API_URL ||
+  "https://abcd1234.ngrok-free.app/api/generate"; // 🔁 update this every time you restart ngrok
 
-// Root endpoint
+// ✅ Root test endpoint
 app.get("/", (req, res) => {
-  res.send("✅ Ollama Portfolio API is running successfully!");
+  res.send("✅ Ollama Portfolio AI backend is running successfully!");
 });
 
-// Chat endpoint
+// 💬 Chat endpoint
 app.post("/ask", async (req, res) => {
   const { prompt } = req.body;
 
@@ -31,11 +42,13 @@ app.post("/ask", async (req, res) => {
   try {
     const response = await fetch(OLLAMA_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+      },
       body: JSON.stringify({
         model: MODEL_NAME,
-        prompt: `You are Sriram Dayal's personal AI assistant on his portfolio website. 
-Provide friendly, short, and accurate answers about his work, background, and AI interests.
+        prompt: `Respond concisely and professionally to visitors’ questions.
 
 User: ${prompt}
 Assistant:`,
@@ -44,7 +57,9 @@ Assistant:`,
     });
 
     if (!response.ok) {
-      throw new Error(`Ollama API returned status ${response.status}`);
+      console.error(`❌ Ollama API returned status ${response.status}`);
+      const errorText = await response.text();
+      return res.status(response.status).send({ error: errorText });
     }
 
     const data = await response.json();
@@ -55,12 +70,16 @@ Assistant:`,
 
     res.json({ response: data.response.trim() });
   } catch (error) {
-    console.error("❌ Error connecting to Ollama:", error.message);
-    res.status(500).json({ error: "Failed to connect to Ollama or process the request." });
+    console.error("🚨 Error connecting to Ollama:", error.message);
+    res.status(500).json({
+      error: "Failed to connect to Ollama or process the request.",
+      details: error.message,
+    });
   }
 });
 
-// Start server
+// 🚀 Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Portfolio AI server is live on http://localhost:${PORT}`);
+  console.log(`🚀 Portfolio AI backend live at: http://localhost:${PORT}`);
+  console.log(`🧠 Forwarding requests to Ollama: ${OLLAMA_API_URL}`);
 });
