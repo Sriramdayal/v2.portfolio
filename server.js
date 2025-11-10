@@ -1,30 +1,26 @@
+// server.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 5001;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(__dirname)); // serve frontend files
 
-// Your local Ollama model
-const MODEL_NAME = "llama3.2:1b";
+// Ollama server config
+const MODEL_NAME = "llama3.2:1b"; 
+const OLLAMA_API_URL = "http://100.20.92.101:11434/api/generate"; // your Render server IP
 
-// Root check
-app.get("/ping", (req, res) => {
-  res.send("✅ Ollama  AI is running!");
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("✅ Ollama Portfolio API is running successfully!");
 });
 
-// Ask endpoint
+// Chat endpoint
 app.post("/ask", async (req, res) => {
   const { prompt } = req.body;
 
@@ -33,28 +29,38 @@ app.post("/ask", async (req, res) => {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:11434/api/generate", {
+    const response = await fetch(OLLAMA_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: MODEL_NAME,
-        prompt: `Your name is Jarvis, Give concise and helpful answers.Adapt your communication style based on the user's preferences. If the user seems formal, respond formally; if they are casual, be more relaxed. Always be respectful and professional.
-        User: ${prompt}
-        Assistant:`,
+        prompt: `You are Sriram Dayal's personal AI assistant on his portfolio website. 
+Provide friendly, short, and accurate answers about his work, background, and AI interests.
+
+User: ${prompt}
+Assistant:`,
         stream: false,
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`Ollama API returned status ${response.status}`);
+    }
+
     const data = await response.json();
+
+    if (!data.response) {
+      throw new Error("Empty response from Ollama.");
+    }
+
     res.json({ response: data.response.trim() });
   } catch (error) {
-    console.error("❌ Ollama connection error:", error);
-    res.status(500).json({ error: "Failed to connect to Ollama." });
+    console.error("❌ Error connecting to Ollama:", error.message);
+    res.status(500).json({ error: "Failed to connect to Ollama or process the request." });
   }
 });
 
-// Run server
+// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🚀 Portfolio AI server is live on http://localhost:${PORT}`);
 });
-
